@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список автомобилей</title>
+</head>
+<body>
+<div>
+    <h1>Список автомобилей</h1>
+    <ul>
+        <!-- Используем Thymeleaf для итерации по автомобилям -->
+        <li th:each="car : ${automobils}">
+            <p th:text="'Автомобиль: ' + ${car.brend} + ', Страна: ' + ${car.county} + ', Год: ' + ${car.yom}"></p>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
