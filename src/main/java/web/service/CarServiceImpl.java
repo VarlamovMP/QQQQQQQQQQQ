@@ -1,14 +1,14 @@
 package web.service;
 
 import org.springframework.stereotype.Component;
-import web.controller.CarsController;
+import org.springframework.stereotype.Service;
 import web.models.Car;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class ReadCars {
+@Service
+public class CarServiceImpl implements CarService {
     private List<Car> automobils;
 
     {
@@ -20,18 +20,15 @@ public class ReadCars {
         automobils.add(new Car("OKA", "USSR", 1987));
     }
 
-    private List<Car> automobils() {
-        return this.automobils = automobils;
-    }
-
-    public List<Car> carList(int x) {
+    @Override
+    public List<Car> carList(int count) {
         List<Car> result = new ArrayList<>();
-        if (x > 0 && x <= automobils.size()) {
-            for (int i = 0; i < x; i++) {
+        if (count > 0 && count <= automobils.size()) {
+            for (int i = 0; i < count; i++) {
                 result.add(automobils.get(i));
             }
-        } else if (x > automobils.size()) {
-            result = automobils();
+        } else if (count > automobils.size()) {
+            result = automobils;
         }
         return result;
     }

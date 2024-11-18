@@ -1,41 +1,30 @@
 package web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import web.models.Car;
-import web.service.ReadCars;
+import web.service.CarService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/cars")
 public class CarsController {
 
-    private final ReadCars readCars;
+    private final CarService carService;
 
-    public CarsController(ReadCars readCars) {
-        this.readCars = readCars;
+    public CarsController(CarService carService) {
+        this.carService = carService;
     }
 
-    List<Car> cars = new ArrayList<>();
-
     @GetMapping()
-    public String index(HttpServletRequest request, Model model) {
-        String count = request.getParameter("count");
-        if (count != null) {
-            cars = readCars.carList(Integer.parseInt(count));
-            model.addAttribute("automobils", cars);
-
-        } else {
-            cars = readCars.carList(Integer.MAX_VALUE);
-            model.addAttribute("automobils", cars);
-        }
+    public String index(@RequestParam(name = "count", required = false) String count, Model model) {
+        int value = (count != null) ? Integer.parseInt(count) : Integer.MAX_VALUE;
+        model.addAttribute("automobils", carService.carList(value));
         return "cars";
     }
 }
