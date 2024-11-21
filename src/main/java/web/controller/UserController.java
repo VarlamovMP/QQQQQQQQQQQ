@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import web.dao.UserDao;
 import web.models.User;
 
+import java.sql.SQLException;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -20,13 +22,13 @@ public class UserController {
     }
 
     @GetMapping()
-    public String index(Model model) {
+    public String index(Model model) throws SQLException {
         model.addAttribute("users", userDao.index());
         return "index";
     }
 
     @GetMapping("/{id}")
-    public String show(Model model, @PathVariable("id") int id) {
+    public String show(Model model, @PathVariable("id") int id) throws SQLException {
         model.addAttribute("user", userDao.show(id));
         return "show";
     }
@@ -38,7 +40,7 @@ public class UserController {
 
     @PostMapping()
     public String create(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult) {
+                         BindingResult bindingResult) throws SQLException {
         if (bindingResult.hasErrors())
             return "new";
         userDao.save(user);
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
+    public String edit(Model model, @PathVariable("id") int id) throws SQLException {
         model.addAttribute("user", userDao.show(id));
         return "edit";
     }
