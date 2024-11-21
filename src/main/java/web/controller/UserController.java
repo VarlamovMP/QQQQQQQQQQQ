@@ -1,5 +1,6 @@
 package web.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,41 +31,41 @@ public class UserController {
         return "show";
     }
 
-    @GetMapping("new")
+    @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user) {
         return "new";
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") User user) {
+    public String create(@ModelAttribute("user") @Valid User user,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "new";
         userDao.save(user);
         return "redirect:/users/";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id){
+    public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userDao.show(id));
         return "edit";
     }
 
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
+    public String update(@ModelAttribute("user") @Valid User user,BindingResult bindingResult,
+                         @PathVariable("id") int id) {
+        if (bindingResult.hasErrors())
+            return "edit";
         userDao.update(id, user);
         return "redirect:/users/";
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id){
+    public String delete(@PathVariable("id") int id) {
         userDao.delete(id);
         return "redirect:/users/";
     }
-
-
-
-
-
-
 
 
 }
