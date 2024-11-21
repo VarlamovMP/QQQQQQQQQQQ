@@ -1,9 +1,11 @@
 package web.models;
 
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+@Table(name = "users")
 public class User {
 
     private int id;
