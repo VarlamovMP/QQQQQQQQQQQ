@@ -6,30 +6,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import web.dao.UserDao;
-import web.models.User;
 
-import java.sql.SQLException;
+import web.models.User;
+import web.services.UserService;
+
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserDao userDao;
+    private final UserService userService;
 
-    public UserController(UserDao userDao) {
-        this.userDao = userDao;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
+
     @GetMapping()
-    public String index(Model model) throws SQLException {
-        model.addAttribute("users", userDao.index());
+    public String index(Model model){
+        model.addAttribute("users", userService.findAll());
         return "index";
+
+
+
     }
 
     @GetMapping("/{id}")
-    public String show(Model model, @PathVariable("id") int id) throws SQLException {
-        model.addAttribute("user", userDao.show(id));
+    public String show(Model model, @PathVariable("id") int id)  {
+        model.addAttribute("user", userService.findOne(id));
         return "show";
     }
 
@@ -40,16 +44,16 @@ public class UserController {
 
     @PostMapping()
     public String create(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult) throws SQLException {
+                         BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "new";
-        userDao.save(user);
+        userService.save(user);
         return "redirect:/users/";
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) throws SQLException {
-        model.addAttribute("user", userDao.show(id));
+    public String edit(Model model, @PathVariable("id") int id) {
+        model.addAttribute("user", userService.findOne(id));
         return "edit";
     }
 
@@ -59,13 +63,13 @@ public class UserController {
                          @PathVariable("id") int id) {
         if (bindingResult.hasErrors())
             return "edit";
-        userDao.update(id, user);
+        userService.update(id, user);
         return "redirect:/users/";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        userDao.delete(id);
+        userService.delete(id);
         return "redirect:/users/";
     }
 
